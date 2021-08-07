@@ -1,31 +1,28 @@
-import { Application, RouterContext, Router } from 'https://deno.land/x/oak/mod.ts'
-import { handleErrors } from './middlewares.ts'
+import { Drash } from 'https://deno.land/x/drash@v1.5.1/mod.ts'
 
-const app = new Application()
-
-const router = new Router()
-router.get('/', (ctx: RouterContext) => {
-  const { response } = ctx
-  response.status = 200
-  response.body = {
-    message: 'hello-world',
-    version: '0.0.1',
+class HomeResource extends Drash.Http.Resource {
+  static paths = ['/']
+  public GET() {
+    // this.response.body = `Hello World! (on ${new Date()})`
+    this.response.headers.set('Content-Type', 'text/html')
+    this.response.body = `<h1>Hello, world!</h1>`
+    return this.response
   }
+}
+
+const server = new Drash.Http.Server({
+  logger: new Drash.CoreLoggers.ConsoleLogger({
+    enabled: true,
+    level: 'debug',
+  }),
+  // response_output: 'text/html',
+  response_output: 'application/json',
+  resources: [HomeResource],
 })
 
-router.get('/test', (ctx: RouterContext) => {
-  const { response } = ctx
-  response.status = 200
-  response.body = {
-    message: 'hello-test',
-    version: '0.0.1',
-  }
+server.run({
+  hostname: 'localhost',
+  port: 3000,
 })
 
-app.use(handleErrors)
-app.use(router.routes())
-app.use(router.allowedMethods())
-
-console.log('Server started on port 3000')
-
-await app.listen({ port: 3000 })
+console.log(`Server running at ${server.hostname}:${server.port}`)
