@@ -4,7 +4,7 @@ class HomeResource extends Drash.Http.Resource {
   static paths = ['/']
   public GET() {
     // this.response.body = `Hello World! (on ${new Date()})`
-    this.response.headers.set('Content-Type', 'text/html')
+    // this.response.headers.set('Content-Type', 'text/html')
     this.response.body = `<h1>Hello, world!</h1>`
     return this.response
   }
@@ -15,13 +15,13 @@ const server = new Drash.Http.Server({
     enabled: true,
     level: 'debug',
   }),
-  // response_output: 'text/html',
-  response_output: 'application/json',
+  response_output: 'text/html',
+  // response_output: 'application/json',
   resources: [HomeResource],
 })
 
 server.run({
-  hostname: 'localhost',
+  // hostname: '127.0.0.1',
   port: 3000,
 })
 
