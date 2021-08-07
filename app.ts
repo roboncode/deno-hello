@@ -1,7 +1,9 @@
-import { serve } from 'https://deno.land/std@0.103.0/http/server.ts'
-const server = serve({ port: 3000 })
-console.log(`Server running on: http://localhost:3000/`)
+import { Application, Context } from 'https://deno.land/x/oak/mod.ts'
 
-for await (const req of server) {
-  req.respond({ status: 200, body: 'Hello, world from Deno!\n' })
-}
+const app = new Application()
+
+app.use((ctx: Context) => {
+  ctx.response.body = 'Hello world from Oak!'
+})
+
+await app.listen('127.0.0.1:3000')
